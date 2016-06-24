@@ -1,8 +1,12 @@
 package treasures.hunter.main;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -21,7 +25,7 @@ public class StartHunting {
 		
 		// first install all elements on the board
 		initBoard();
-		
+		  
 		// then display the card
 		display();
 
@@ -36,6 +40,42 @@ public class StartHunting {
 		// start adventurers movements
 		for(Adventurer adv : Board.adventurers)
 			adv.start();
+		
+		
+		while(!everyAdventurersHasFinishedMovements()){};
+		
+		writeFinalAdventurerPosition();
+		
+		System.exit(0);
+	}
+
+	private static void writeFinalAdventurerPosition() {
+		for(Adventurer adv : Board.adventurers){
+			String data = adv.getNameAdventurer() + " " + adv.getX()+"-"+adv.getY()+ " " + adv.getNbTreasure();
+			
+			writeDatasInFile(data);
+		}
+	}
+	
+	 protected static void writeDatasInFile(final String datas) {
+	        try{
+	            final PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("finalAdventurerPosition.txt", true)));
+	            out.println(datas);
+	            out.close();
+	        }
+	        catch(final IOException e){
+	            e.printStackTrace();
+	        }
+	    }
+
+	private static boolean everyAdventurersHasFinishedMovements() {
+
+		for(Adventurer adv : Board.adventurers){
+			if(!adv.isFinished())
+				return false;
+		}
+		
+		return true;
 	}
 
 	private static void initBoard() {
@@ -77,7 +117,8 @@ public class StartHunting {
 				int Y = Integer.valueOf(coord[1]) - 1;
 				String orientation = infoLine[2];
 				String movements = infoLine[3];
-				Adventurer adv = new Adventurer(name, X, Y, orientation, movements);
+				int timeMovement = Integer.valueOf(infoLine[4]);
+				Adventurer adv = new Adventurer(name, X, Y, orientation, movements,timeMovement);
 				if(Board.adventurers == null)
 					Board.adventurers = new Vector<Adventurer>();
 				Board.adventurers.add(adv );
@@ -121,7 +162,7 @@ public class StartHunting {
 
 	protected static Vector<String> getDatasInFile(String fileName) {
 		Vector<String> lines = null;
-
+		
 		// Create object of FileReader
 		FileReader inputFile;
 		try {

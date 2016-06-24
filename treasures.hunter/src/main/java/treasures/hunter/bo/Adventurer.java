@@ -12,8 +12,10 @@ public class Adventurer extends Thread {
 	public static final String RIGHT_MOVEMENT = "D";
 	public static final String AHEAD_MOVEMENT = "A";
 
-	private static int timeMovement = 1000;
+	private int timeMovement = 1000;
 
+	private boolean finished=false;
+	
 	private String name;
 	private int orientation;
 	private Vector<String> movements;
@@ -69,12 +71,13 @@ public class Adventurer extends Thread {
 		this.movements = movements;
 	}
 
-	public Adventurer(String name, int X, int Y, String orientation, String movements) {
+	public Adventurer(String name, int X, int Y, String orientation, String movements, int timeMovement) {
 		this.name = name;
 		this.X = X;
 		this.Y = Y;
 		setOrientation(orientation);
 		setMovements(movements);
+		setTimeMovement(timeMovement);
 	}
 
 	private void setMovements(String movements) {
@@ -136,7 +139,7 @@ public class Adventurer extends Thread {
 			}
 			
 			try {
-				Thread.sleep(timeMovement);
+				Thread.sleep(getTimeMovement());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -145,7 +148,7 @@ public class Adventurer extends Thread {
 			lookForTreasure();
 		}
 
-
+		setFinished(true);
 	}
 
 	private void lookForTreasure() {
@@ -170,7 +173,7 @@ public class Adventurer extends Thread {
 
 	private void makePause() {
 		try {
-			Thread.sleep(timeMovement);
+			Thread.sleep(getTimeMovement());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -198,6 +201,22 @@ public class Adventurer extends Thread {
 
 	public void run() {
 		executeMovement();
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public int getTimeMovement() {
+		return timeMovement;
+	}
+
+	public void setTimeMovement(int timeMovement) {
+	 this.timeMovement = timeMovement;
 	}
 
 }

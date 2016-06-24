@@ -9,7 +9,7 @@ public class Board {
 	
 	public static Case[][] card;
 	
-	
+	 
 	
 	public static Vector<Adventurer> adventurers = null;
 	
